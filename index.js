@@ -31,23 +31,29 @@ const url = require("url");
 
 // SERVER
 
-const server = http.createServer((req, res) => {
-  const pathName = req.url;
+const data = fs.readFileSync(`${__dirname}/dev-data/data.json`, "utf-8");
+const dataObj = JSON.parse(data);
 
-  if (pathName === "/" || pathName === "/overview") {
-    res.end("overview");
-  } else if (pathName === "/product") {
-    res.end("product");
-  } else if (pathName === "/api") {
-    res.end("api");
-  } else {
-    res.writeHead(404, {
-      "content-type": "text/html",
-    });
-    res.end("Not found!");
-  }
+const server = http.createServer((req, res) => {
+	const pathName = req.url;
+
+	if (pathName === "/" || pathName === "/overview") {
+		res.end("overview");
+	} else if (pathName === "/product") {
+		res.end("product");
+	} else if (pathName === "/api") {
+		res.writeHead(200, {
+			"content-type": "application/json",
+		});
+		res.end(data);
+	} else {
+		res.writeHead(404, {
+			"content-type": "text/html",
+		});
+		res.end("Not found!");
+	}
 });
 
 server.listen(8000, "127.0.0.1", () => {
-  console.log("Listening to port 8000");
+	console.log("Listening to port 8000");
 });
